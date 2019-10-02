@@ -1,0 +1,229 @@
+<html>
+  <style>
+    body, html {
+  box-sizing: border-box;
+  font-family: Avant Garde,Avantgarde,Century Gothic,CenturyGothic,AppleGothic,sans-serif;
+  width: 270mm;
+  margin: 0;
+  padding: 0 55px 0 30px;
+}
+@page {
+margin: 0;
+size: letter;
+}
+
+p {
+  margin: 5px 0;
+}
+
+.text-large {
+  margin: 5px 0;
+  font-size: 45px;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header img {
+  height: 150px;
+}
+
+.header p {
+  text-align: right;
+}
+
+.invoice-details {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.dates > div {
+  margin-bottom: 50px;
+}
+
+.text-header {
+  color: #722F37;
+  font-weight: bold;
+}
+
+.divider {
+  width: 100%;
+  height: 3px;
+  background-color: #722F37;
+  border-bottom: 2px solid #B7747C;
+}
+
+table {
+  margin-top: 25px;
+  width: 100%;
+}
+
+.table-header {
+  color: #722F37;
+  font-weight: bold;
+}
+
+.table-header:first-of-type {
+  width: 35%;
+}
+
+.table-header {
+  width: 20%;
+  padding-bottom: 30px;
+}
+
+tr td:nth-of-type(2) {
+  text-align: center;
+}
+
+tr td:nth-of-type(3) {
+  text-align: center;
+}
+
+tr td:nth-of-type(4) {
+  text-align: center;
+}
+
+tr td:nth-of-type(5) {
+  text-align: right;
+}
+
+td {
+  padding-bottom: 30px;
+}
+
+.divider-light {
+  width: 100%;
+  height: 3px;
+  background-color: rgba(150, 150, 150, .1);
+}
+
+.sub-total {
+  display: flex;
+  justify-content: space-between;
+  width: 280px;
+}
+
+.sub-totals {
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.sub-totals .divider-light {
+  margin: 15px 0;
+  width: 30%;
+}
+  </style>
+  <body>
+    <div class="header">
+      <img src="https://app.vinocount.com/images/VinocountSupplier/alt-logo.png"/>
+      <div class="header__address">
+        <p>{{ supplier_location.name }}</p>
+        <p>{{ supplier_location.shipping_address.address }}</p>
+        <p>{{ supplier_location.shipping_address.city }}, {{ supplier_location.shipping_address.region }}</p>
+        <p>{{ supplier_location.shipping_address.postal_code }}</p>
+        <p>{{ supplier_location.shipping_address.country }}</p>
+      </div>
+    </div>
+    
+    <div class="invoice-details">
+      <div class="billed-to">
+        <p class="text-header">Billed to</p>
+        <div>
+          <p>{{ location.name }}</p>
+          <p>{{ location.billing_address.address }}</p>
+          <p>{{ location.billing_address.city }}, {{ location.billing_address.region }}</p>
+          <p>{{ location.billing_address.postal_code }}</p>
+          <p>{{ location.billing_address.country }}</p>
+        </div>
+      </div>
+      <div class="dates">
+        <div>
+          <p class="text-header">Date of Issue</p>
+          <p>{{ issue_date|date:'Y/m/d' }}</p>
+        </div>
+        <div>
+          <p class="text-header">Due Date</p>
+          <p>{{ invoice.payment_due_date|date:'Y/m/d' }}</p>
+        </div>
+      </div>
+      <div class="dates">
+        <div>
+          <p class="text-header">Invoice Number</p>
+          <p>{{ invoice.id }}</p>
+        </div>
+        <div>
+          <p class="text-header">Payment Status</p>
+          <p>{{ payment_status }}</p>
+        </div>
+      </div>
+      <div class="amount-due">
+        <p class="text-header">Amount Due</p>
+        <p class="text-large">${{ amount_due }}</p>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <table>
+      <thead>
+        <tr>
+          <td class="table-header">Item</td>
+          <td class="table-header">SKU</td>
+          <td class="table-header">Price</td>
+          <td class="table-header">Quantity</td>
+          <td class="table-header">Total</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in line_items %}
+            <tr>
+                <td>{{ item.invoice_item.item.name }}</td>
+                <td>{{ item.invoice_item.item.item_detail.supplier_code }}</td>
+                <td>${{ item.invoice_item.price }}</td>
+                <td>{{ item.invoice_item.order_quantity }}</td>
+                <td>${{ item.cost }}</td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="divider-light"></div>
+    <div class="sub-totals">
+      <div class="sub-total">
+        <p>Subtotal</p>
+        <p>{{ subtotal }}</p>
+      </div>
+      <div class="sub-total">
+        <p>HST ({{ tax }})%</p>
+        <p>{{ taxed_subtotal }}</p>
+      </div>
+      <div class="divider-light"></div>
+      <div class="sub-total">
+        <p>Keg Deposits ({{ keg_deposits }})</p>
+        <p>{{ keg_deposits_cost }}</p>
+      </div>
+      <div class="sub-total">
+        <p>Keg Returns ({{ invoice.keg_returns }})</p>
+        <p>{{ keg_returns_cost }}</p>
+      </div>
+      <div class="divider-light"></div>
+      <div class="sub-total">
+        <p>Total</p>
+        <p>{{ total }}</p>
+      </div>
+      <div class="sub-total">
+        <p>Amount Paid</p>
+        <p>{{ amount_paid }}</p>
+      </div>
+      <div class="divider-light"></div>
+      <div class="sub-total">
+        <p class="text-header">Amount Due</p>
+        <p>${{ amount_due }}</p>
+      </div>
+    </div>
+  </body>
+</html>
