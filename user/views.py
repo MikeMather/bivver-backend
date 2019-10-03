@@ -174,6 +174,14 @@ class UserSettingsViewSet(generics.UpdateAPIView):
         else:
             user.billing_address = user.shipping_address
 
+        is_supplier = request.data.get('supplier', None)
+        if is_supplier:
+            supplier_data = request.data['supplier']
+            supplier = request.user.supplier
+            supplier.keg_deposit_price = supplier_data['keg_deposit_price']
+            supplier.default_payment_term = supplier_data['default_payment_term']
+            supplier.save()
+
         user.save()
         serializer = UserSerializer(user)
         return Response(serializer.data, status.HTTP_200_OK)

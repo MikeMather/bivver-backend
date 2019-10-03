@@ -13,4 +13,5 @@ urlpatterns = [
     path('payments/', PaymentsViewSet.as_view(), name='payments'),
     path('activities-seen/', mark_activities_seen, name='mark-activities-seen'),
     path('signatures/<int:orderId>/', retrieve_signature_image, name='signatures'),
+    path('invoices/<int:orderId>/', retrieve_invoice_pdf, name='invoice-pdfs'),
 ]

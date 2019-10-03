@@ -94,28 +94,28 @@ def email_order_revision_requested(order_id):
         send_order_email(subject, [to_email], context, html)
 
 
-# @task
-# def email_order_delivered(filename, order_id):
-#         from order.models import Order
+@task
+def email_order_delivered(filename, order_id):
+        from order.models import Order
 
-#         order = Order.objects.get(pk=order_id)
-#         if order.supplier.user:
-#             subject = 'Order Completed'
-#             to_emails = [user.email for user in order.location.user.all()]
-#             to_emails.append(order.supplier.default_email)
-#             context = {
-#                 'order_number': order.id,
-#                 'updated_at': order.updated_at.strftime('%Y-%m-%d')
-#             }
-
-#             client = S3Client(settings.AWS_VINOCOUNT_IMAGES_BUCKET_NAME)
-#             pdf = client.download_object(order.pdf_key)
-#             attachment = {
-#                 'filename': filename,
-#                 'data': pdf.read(),
-#                 'content-type': 'application/pdf'
-#             }
-#             send_order_email(subject, to_emails, context, 'orderDelivered.html', attachment=attachment)
+        order = Order.objects.get(pk=order_id)
+        subject = 'Order Completed'
+        to_emails = [order.client.user.email, order.supplier.user.email]
+        updated_at = order.updated_at.strftime('%Y-%m-%d')
+        context = {
+            'supplier_name': order.supplier.name,
+            'updated_at': updated_at
+        }
+        if order.pdf_key:
+            client = S3Client(settings.AWS_VINOCOUNT_IMAGES_BUCKET_NAME)
+            pdf = client.download_object(order.pdf_key)
+            attachment = {
+                'filename': filename,
+                'data': pdf.read(),
+                'content-type': 'application/pdf'
+            }
+            html = html = get_sendgrid_html('ORDER_DELIVER')
+            send_order_email(subject, to_emails, context, html, attachment=attachment)
             
 
 # Remove the order quantities for an order from the supplier's inventory
@@ -133,7 +133,7 @@ def update_supplier_inventory(order_id):
 
 
 @task
-def generate_order_pdf(order_id):
+def generate_invoice_pdf(order_id):
     from order.models import Order
     order = Order.objects.get(pk=order_id)
     if order.pdf_key:
@@ -143,8 +143,8 @@ def generate_order_pdf(order_id):
     line_items = []
     keg_deposits = 0
     for i in order.line_items.all():
-        line_items += [{'invoice_item': i, 'cost': round(i.price*i.order_quantity, 2)} ]
-        if i.item.count_by == 'Keg':
+        line_items += [{'line_item': i, 'cost': round(i.price*i.order_quantity, 2)} ]
+        if i.item.order_by == 'Keg':
             keg_deposits += i.order_quantity
 
     # Calculate total values
@@ -159,8 +159,8 @@ def generate_order_pdf(order_id):
         'order': order,
         'line_items': line_items,
         'supplier': order.supplier,
-        'supplier_location': order.supplier.user,
-        'location': order.client,
+        'supplier_user': order.supplier.user,
+        'client': order.client,
         'issue_date': order.payment_due_date - timedelta(days=order.supplier.default_payment_term),
         'payment_status': 'Paid' if is_paid else 'Outstanding',
         'amount_due': 0 if is_paid else '%.2f' % total_due,
@@ -175,9 +175,9 @@ def generate_order_pdf(order_id):
     }
 
     # Generating the pdf saves it to S3 and returns the key in the bucket
-    pdf_generator = PdfManager('orderPdf.html', context)
-    location_name = re.sub(r'[^\w\s]', '', order.location.name).replace(' ', '_')
-    filename = 'Order{}_{}.pdf'.format(order.id, location_name)
+    pdf_generator = PdfManager('invoicePdf.html', context)
+    client_name = re.sub(r'[^\w\s]', '', order.client.name).replace(' ', '_')
+    filename = 'Order{}_{}.pdf'.format(order.id, client_name)
     key = pdf_generator.generate(filename)
     order.pdf_key = key
     order.save()

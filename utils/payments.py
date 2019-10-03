@@ -1,6 +1,7 @@
 import stripe
 from supplier.models import Supplier
 from order.models import Payment, Order
+from user.models import PaymentAccount
 from django.conf import settings
 from client.models import Client
 from django.core.exceptions import ObjectDoesNotExist
@@ -27,7 +28,6 @@ class PaymentManager:
         )
         PaymentAccount.objects.create(
             stripe_user_id=customer.id,
-            account_type='customer',
             user=self.client_user
         )
         return customer

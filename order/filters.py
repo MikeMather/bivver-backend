@@ -35,6 +35,8 @@ class OrderFilter(FilterSet):
     
     def filter_client_active(self, queryset, name, value):
         active_client_states = [
+            'delivered_pending_payment',
+            'delivered_paid',
             'pending_payment', 
             'paid', 
             'supplier_editing', 

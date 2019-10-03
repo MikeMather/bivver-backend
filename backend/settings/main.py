@@ -288,6 +288,7 @@ SENDGRID = {
         'ORDER_APPROVE': 'd-909c1b91976e4398b571755e7515c507',
         'ORDER_DECLINE': 'd-ff725173c31c49aa83f22fd47a6e8831',
         'ORDER_REVISE': 'd-0fee3760bb2d4d02a689fccf9962645c',
+        'ORDER_DELIVER': 'd-0780fe2d57924dca9fb24de0cc866427'
     }
 }
 

@@ -124,11 +124,11 @@ td {
     <div class="header">
       <img src="https://app.vinocount.com/images/VinocountSupplier/alt-logo.png"/>
       <div class="header__address">
-        <p>{{ supplier_location.name }}</p>
-        <p>{{ supplier_location.shipping_address.address }}</p>
-        <p>{{ supplier_location.shipping_address.city }}, {{ supplier_location.shipping_address.region }}</p>
-        <p>{{ supplier_location.shipping_address.postal_code }}</p>
-        <p>{{ supplier_location.shipping_address.country }}</p>
+        <p>{{ supplier_user.supplier.name }}</p>
+        <p>{{ supplier_user.shipping_address.address }}</p>
+        <p>{{ supplier_user.shipping_address.city }}, {{ supplier_user.shipping_address.region }}</p>
+        <p>{{ supplier_user.shipping_address.postal_code }}</p>
+        <p>{{ supplier_user.shipping_address.country }}</p>
       </div>
     </div>
     
@@ -136,11 +136,11 @@ td {
       <div class="billed-to">
         <p class="text-header">Billed to</p>
         <div>
-          <p>{{ location.name }}</p>
-          <p>{{ location.billing_address.address }}</p>
-          <p>{{ location.billing_address.city }}, {{ location.billing_address.region }}</p>
-          <p>{{ location.billing_address.postal_code }}</p>
-          <p>{{ location.billing_address.country }}</p>
+          <p>{{ client.name }}</p>
+          <p>{{ client.user.billing_address.address }}</p>
+          <p>{{ client.user.billing_address.city }}, {{ client.billing_address.region }}</p>
+          <p>{{ client.user.billing_address.postal_code }}</p>
+          <p>{{ client.user.billing_address.country }}</p>
         </div>
       </div>
       <div class="dates">
@@ -150,13 +150,13 @@ td {
         </div>
         <div>
           <p class="text-header">Due Date</p>
-          <p>{{ invoice.payment_due_date|date:'Y/m/d' }}</p>
+          <p>{{ order.payment_due_date|date:'Y/m/d' }}</p>
         </div>
       </div>
       <div class="dates">
         <div>
           <p class="text-header">Invoice Number</p>
-          <p>{{ invoice.id }}</p>
+          <p>{{ order.id }}</p>
         </div>
         <div>
           <p class="text-header">Payment Status</p>
@@ -182,10 +182,10 @@ td {
       <tbody>
         {% for item in line_items %}
             <tr>
-                <td>{{ item.invoice_item.item.name }}</td>
-                <td>{{ item.invoice_item.item.item_detail.supplier_code }}</td>
-                <td>${{ item.invoice_item.price }}</td>
-                <td>{{ item.invoice_item.order_quantity }}</td>
+                <td>{{ item.line_item.item.name }}</td>
+                <td>{{ item.line_item.item.sku }}</td>
+                <td>${{ item.line_item.price }}</td>
+                <td>{{ item.line_item.order_quantity }}</td>
                 <td>${{ item.cost }}</td>
             </tr>
         {% endfor %}
@@ -207,7 +207,7 @@ td {
         <p>{{ keg_deposits_cost }}</p>
       </div>
       <div class="sub-total">
-        <p>Keg Returns ({{ invoice.keg_returns }})</p>
+        <p>Keg Returns ({{ order.keg_returns }})</p>
         <p>{{ keg_returns_cost }}</p>
       </div>
       <div class="divider-light"></div>

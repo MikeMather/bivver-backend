@@ -12,6 +12,7 @@ from .permissions import *
 from utils.utils import get_tax
 from utils.payments import PaymentManager
 import stripe
+from order.tasks import generate_invoice_pdf
 
 
 # paginate the invoices to reduce query size
@@ -88,6 +89,25 @@ def retrieve_signature_image(request, orderId):
     return Response({'url': link}, status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+def retrieve_invoice_pdf(request, orderId):
+    order = Order.objects.get(pk=orderId)
+
+    # Check that the user has access
+    if not (order.client.user == request.user or order.supplier.user == request.user):
+        return Response({'message': 'You don\'t have access to this resource'}, status.HTTP_401_UNAUTHORIZED)
+
+    # If we don't already have the pdf generated, generate it and return the path of the file in the S3 bucket
+    if not order.pdf_key:
+        key = generate_invoice_pdf(order.id)
+    else:
+        key = order.pdf_key
+    client = S3Client(settings.AWS_VINOCOUNT_IMAGES_BUCKET_NAME)
+    link = client.get_presigned_url(key)
+
+    return Response({'url': link}, status.HTTP_200_OK)
+
+
 class OrderActivityViewSet(generics.CreateAPIView):
 
     queryset = OrderActivity.objects.all()
@@ -141,6 +161,7 @@ class PaymentsViewSet(generics.CreateAPIView):
                     message=f'Payment method changed from {payment.payment_type} to {payment_method}'
                 )
             payment.payment_type = payment_method
+            payment.deferred = deferred
             payment.amount = amount
             payment.save()
             return Response({'message': 'Payment successfully updated'}, status.HTTP_200_OK)

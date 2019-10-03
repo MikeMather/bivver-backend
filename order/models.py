@@ -59,19 +59,17 @@ class Order(models.Model):
     
     @transition(field=state, source=['pending_supplier_approval'], target='pending_payment')
     def supplier_approve_unpaid(self):
-        from order.tasks import update_supplier_inventory
+        from order.tasks import update_supplier_inventory, email_order_approved
         self.create_activity('Approved', created_by='supplier')
+        email_order_approved.delay(self.id)
         # Create client if not already a client
         # self.client.create_supplier_client(self.supplier)
-        # email_order_approved.delay(self.id)
         # update_supplier_inventory.delay(self.id)
 
     @transition(field=state, source=['pending_payment', 'draft'], target='paid')
     def client_paid(self):
         from utils.payments import PaymentManager
-        payments = PaymentManager(self.supplier_id, self.client_id)
-        payments.create_charge(self.payment)
-        self.create_activity('Order paid', created_by='supplier')
+        self.create_activity('Order paid')
     
     @transition(field=state, source=['pending_payment'], target='delivered_pending_payment')
     def deliver_pending_payment(self):
@@ -82,7 +80,7 @@ class Order(models.Model):
         from utils.payments import PaymentManager
         payments = PaymentManager(self.supplier_id, self.client_id)
         payments.create_charge(self.payment)
-        self.create_activity('Order paid', created_by='supplier')
+        self.create_activity('Order paid')
 
     @transition(field=state, source=['paid'], target='delivered_paid')
     def deliver(self):
