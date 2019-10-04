@@ -55,16 +55,16 @@ class Order(models.Model):
         from order.tasks import update_supplier_inventory, email_order_approved
         self.create_activity('Approved', created_by='supplier')
         email_order_approved.delay(self.id)
-        # update_supplier_inventory.delay(self.id) # Remove quantities from supplier's inventory
+        update_supplier_inventory.delay(self.id) # Remove quantities from supplier's inventory
     
     @transition(field=state, source=['pending_supplier_approval'], target='pending_payment')
     def supplier_approve_unpaid(self):
         from order.tasks import update_supplier_inventory, email_order_approved
         self.create_activity('Approved', created_by='supplier')
         email_order_approved.delay(self.id)
+        update_supplier_inventory.delay(self.id)
         # Create client if not already a client
         # self.client.create_supplier_client(self.supplier)
-        # update_supplier_inventory.delay(self.id)
 
     @transition(field=state, source=['pending_payment', 'draft'], target='paid')
     def client_paid(self):

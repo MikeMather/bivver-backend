@@ -121,15 +121,16 @@ def email_order_delivered(filename, order_id):
 # Remove the order quantities for an order from the supplier's inventory
 @task
 def update_supplier_inventory(order_id):
-    from ordering.models import Order
+    from order.models import Order
     order = Order.objects.get(pk=order_id)
     for line_item in order.line_items.all():
         if line_item.item.stock_quantity > line_item.order_quantity:
-            new_quantity = line_item.item.quantity - line_item.order_quantity
+            new_quantity = line_item.item.stock_quantity - line_item.order_quantity
+            line_item.item.stock_quantity = new_quantity
         else:
             # If they don't have enough in stock to fill the order, just set the item's quantity to 0
             line_item.item.stock_quantity = 0
-        line_item.save()
+        line_item.item.save()
 
 
 @task
