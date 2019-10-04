@@ -43,7 +43,7 @@ class RegisterViewSet(generics.CreateAPIView):
 
         image = ''
         if 'image' in request.data:
-            image = process_image(request.data['image'], 'custom')
+            image = process_image(request.data['image'], 'users')
 
         user_data = {
             'email': username,

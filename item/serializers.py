@@ -38,7 +38,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
         base64_image_string = validated_data.get('base64_image', None)
         if base64_image_string:
-            item.image = process_image(base64_image_string, 'custom')
+            item.image = process_image(base64_image_string, 'items')
         
         item.save()
         return item
@@ -60,7 +60,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
         base64_image_string = validated_data.get('base64_image', None)
         if base64_image_string:
-            item.image = process_image(base64_image_string, 'custom', delete_key=item.image)
+            item.image = process_image(base64_image_string, 'items', delete_key=item.image)
         
         item.save()
         return item
