@@ -29,10 +29,10 @@ DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 
-APP_NAME = os.environ.get('APP_NAME', 'Vinocount')
+APP_NAME = os.environ.get('APP_NAME', 'Bivver')
 BACKEND_URL = os.environ.get('BACKEND_URL', 'http://127.0.0.1:3000/')
-CLIENT_FRONTEND_URL = os.environ.get('CLIENT_FRONTEND_URL', 'http://127.0.0.1:8080/')
-SUPPLIER_FRONTEND_URL = os.environ.get('SUPPLIER_FRONTEND_URL', 'http://127.0.0.1:8081/')
+CLIENT_FRONTEND_URL = os.environ.get('CLIENT_FRONTEND_URL', 'http://127.0.0.1:3001/')
+SUPPLIER_FRONTEND_URL = os.environ.get('SUPPLIER_FRONTEND_URL', 'http://127.0.0.1:3002/')
 
 # Application definition
 
@@ -87,7 +87,6 @@ CORS_ALLOW_HEADERS = (
 
 CACHES = {
     'default': {
-
         'BACKEND': 'redis_cache.RedisCache',
         'LOCATION': os.environ.get('REDISCLOUD_URL', ''),
         'OPTIONS': {
@@ -104,8 +103,8 @@ if (DEBUG):
 
 
 #Celery
-CELERY_BROKER_URL = os.environ.get('REDIS_BROKER_URL', 'redis://localhost:6379')
-CELERY_RESULT_BACKEND = os.environ.get('REDIS_BROKER_URL', 'redis://localhost:6379')
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -125,8 +124,8 @@ AWS_SES_SECRET_ACCESS_KEY = 'suX7Yc1NhdVrCPeMVJ6Cy7k6igES1LoqthYpq97I'
 AWS_ACCESS_KEY_ID = 'AKIAILXJ5M63ZNXEVHKQ'
 AWS_SECRET_ACCESS_KEY = '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'
 
-AWS_S3_URL = 'https://s3.ca-central-1.amazonaws.com/vinocount-images/'
-AWS_VINOCOUNT_IMAGES_BUCKET_NAME = 'vinocount-images'
+AWS_S3_URL = 'https://s3.ca-central-1.amazonaws.com/bivver-public/'
+AWS_VINOCOUNT_IMAGES_BUCKET_NAME = 'bivver-public'
 
 AWS_WORKMAIL_URL = 'imap.mail.us-east-1.awsapps.com'
 AWS_WORKMAIL_USERNAME = 'reports@fyticspos.com' 
@@ -278,7 +277,7 @@ STRIPE = {
 # Scout application monitoring settings
 SCOUT_MONITOR = True
 SCOUT_KEY = os.environ.get('SCOUT_KEY', '')
-SCOUT_NAME = 'Vinocount Production'
+SCOUT_NAME = 'Bivver Production'
 
 SENDGRID = {
     'API_KEY': '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',
@@ -315,13 +314,4 @@ TAX_API = {
             'yukon': 'YT'
         }
     }
-}
-
-# Tests
-# Use nose to run all tests
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-FIREBASE = {
-    "FCM_ENDPOINT": "https://fcm.googleapis.com/fcm/send",
-    "FCM_SERVER_KEY": "AAAAS-KZYr8:APA91bEr7PTomD8F4ehYkxVpCLpDnNrwFZp5dz3LzivUAcBFVp1Bl2OEoDhOnT9PsZXNbvW4Tk5-5RuSGA6GTkcxegUKD13SQPQb922n-4YjxKHjPtyNquXATZWyWGiG6eXgpyecZhCR"
 }
