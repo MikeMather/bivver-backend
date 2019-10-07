@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
     shipping_address = AddressSerializer(required=False)
     billing_address = AddressSerializer(required=False)
     has_payment_account = serializers.SerializerMethodField()
-    addresses_are_same = serializers.BooleanField(write_only=True)
+    addresses_are_same = serializers.BooleanField(write_only=True, required=False)
 
     def get_has_payment_account(self, obj):
         try:
