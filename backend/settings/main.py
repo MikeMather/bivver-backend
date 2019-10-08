@@ -112,7 +112,7 @@ CELERY_TIMEZONE = 'UTC'
 
 ROOT_URLCONF = 'backend.urls'
 
-FROM_EMAIL = 'noreply@fytics.com'
+FROM_EMAIL = 'noreply@bivver.ca'
 EMAIL_HOST = 'smtp.mailtrap.io'
 EMAIL_HOST_USER = '663ef4e1aac735'
 EMAIL_HOST_PASSWORD = '8c32a876c1569e'
@@ -126,10 +126,6 @@ AWS_SECRET_ACCESS_KEY = '4mAXzwsVMyuYHD92PzTbWkgtEGu7ncWq+GdqGLNG'
 
 AWS_S3_URL = 'https://s3.ca-central-1.amazonaws.com/bivver-public/'
 AWS_VINOCOUNT_IMAGES_BUCKET_NAME = 'bivver-public'
-
-AWS_WORKMAIL_URL = 'imap.mail.us-east-1.awsapps.com'
-AWS_WORKMAIL_USERNAME = 'reports@fyticspos.com' 
-AWS_WORKMAIL_PASSWORD = 'Ripcurl1?'
 
 TEMPLATES = [
     {

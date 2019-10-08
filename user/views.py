@@ -49,13 +49,13 @@ class RegisterViewSet(generics.CreateAPIView):
             'email': username,
             'username': username,
             'password': password,
-            'verification_token': verification_token,
             'account_type': account_type,
         }
         user_serializer = UserSerializer(data=user_data)
         if user_serializer.is_valid():
             user = user_serializer.save()
             user.set_password(password)
+            user.verification_token = verification_token
         else:
             return Response(user_serializer.errors, status.HTTP_400_BAD_REQUEST)
 
