@@ -87,7 +87,7 @@ def email_order_revision_requested(order_id):
         context = {
             'order_id': order.id,
             'supplier_name': order.supplier.name,
-            'order_link': redirect_url,
+            'order_url': redirect_url,
             'activity_message': last_activity.message
         }
         html = html = get_sendgrid_html('ORDER_REVISE')
