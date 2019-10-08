@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Group
+from sendgrid import SendGridAPIClient
 from django.db.models import Max
 from django.conf import settings
 from item.models import *
@@ -9,6 +10,7 @@ from utils.constants import *
 import stripe
 import requests
 import base64
+import json
 import io
 import boto3
 import uuid
@@ -82,3 +84,8 @@ def get_active_orders_list(user):
         return SUPPLIER_ACTIVE_ORDER_STATES
     return CLIENT_ACTIVE_ORDER_STATES
     
+
+def get_sendgrid_html(key):
+    sg = SendGridAPIClient(settings.SENDGRID['API_KEY'])
+    response = sg.client.templates._(settings.SENDGRID['TEMPLATES'][key]).get()
+    return json.loads(response.body)['versions'][0]['html_content']

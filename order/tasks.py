@@ -5,10 +5,10 @@ from utils.utils import get_tax
 from item.models import *
 from datetime import timedelta
 from utils.pdf_manager import PdfManager
+from utils.utils import get_sendgrid_html
 from decimal import Decimal
 from utils.aws import S3Client
 import re
-from sendgrid import SendGridAPIClient
 import json
 
 
@@ -21,32 +21,24 @@ def send_order_email(subject, to_emails, context, template, attachment=None):
         else:
             email.send()
 
-def get_sendgrid_html(order_state):
-    sg = SendGridAPIClient(settings.SENDGRID['API_KEY'])
-    response = sg.client.templates._(settings.SENDGRID['TEMPLATES'][order_state]).get()
-    return json.loads(response.body)['versions'][0]['html_content']
-
 @task
 def email_client_submit(order_id):
         from order.models import Order
-        sg = SendGridAPIClient(settings.SENDGRID['API_KEY'])
         order = Order.objects.get(pk=order_id)
         subject = 'New Order'
-        if order.supplier.user:
-            order_url = '{}orders/{}'.format(settings.SUPPLIER_FRONTEND_URL, order.id)
-            to_email = order.supplier.user.email
-            context = {
-                'client_name': order.client.name,
-                'order_url': order_url,
-            }
-            html = get_sendgrid_html('ORDER_SUBMIT')
-            send_order_email(subject, [to_email], context, html)
+        order_url = '{}orders/{}'.format(settings.SUPPLIER_FRONTEND_URL, order.id)
+        to_email = order.supplier.user.email
+        context = {
+            'client_name': order.client.name,
+            'order_url': order_url,
+        }
+        html = get_sendgrid_html('ORDER_SUBMIT')
+        send_order_email(subject, [to_email], context, html)
 
 
 @task
 def email_order_approved(order_id):
         from order.models import Order
-
         order = Order.objects.get(pk=order_id)
         subject = 'Order approved by {}'.format(order.supplier.name)
         redirect_url = '{}orders/{}'.format(settings.CLIENT_FRONTEND_URL, order.id)
