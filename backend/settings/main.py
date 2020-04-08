@@ -118,13 +118,13 @@ EMAIL_HOST_USER = '663ef4e1aac735'
 EMAIL_HOST_PASSWORD = '8c32a876c1569e'
 EMAIL_PORT = '2525'
 
-AWS_SES_ACCESS_KEY_ID = 'AKIA5UUIRTYXXJXZS4OG'
-AWS_SES_SECRET_ACCESS_KEY = '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'
+AWS_SES_ACCESS_KEY_ID = ''
+AWS_SES_SECRET_ACCESS_KEY = ''
 
-AWS_ACCESS_KEY_ID = 'AKIA5UUIRTYXX54EEM5F'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
 
-AWS_S3_URL = 'https://s3.ca-central-1.amazonaws.com/bivver-public/'
+AWS_S3_URL = ''
 AWS_VINOCOUNT_IMAGES_BUCKET_NAME = 'bivver-public'
 
 TEMPLATES = [
@@ -259,14 +259,14 @@ TEMPLATES = [
 
 # Stripe keys
 STRIPE = {
-    'API_KEY': 'pk_test_BJHlY3dKiWDpjGVihty1Zwm9',
-    'CLIENT_SECRET': 'sk_test_4JxNtbEsWhtvC1pWHaYDCB4b',
-    'CLIENT_ID': 'ca_Ehf6RukQblf1Rg23P0cHAdmBYs7cDGny',
+    'API_KEY': '',
+    'CLIENT_SECRET': '',
+    'CLIENT_ID': '',
     'TOKEN_URL': 'https://connect.stripe.com/oauth/token',
     'APPLICATION_FEE': 0.005,
     'PLANS': {
-        'INVENTORY': 'plan_EzM3z5ohCaGOEq',
-        'POS': 'plan_EzM24Q0tRf3WdH',
+        'INVENTORY': '',
+        'POS': '',
     }
 }
 
@@ -276,19 +276,19 @@ SCOUT_KEY = os.environ.get('SCOUT_KEY', '')
 SCOUT_NAME = 'Bivver Production'
 
 SENDGRID = {
-    'API_KEY': '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',
+    'API_KEY': '',
     'TEMPLATES': {
-        'VERIFY_EMAIL': 'd-85b02a478db64ebeb242ec2a27b9a452',
-        'ORDER_SUBMIT': 'd-eb9ca4a544cb4abc98461c12700322e6',
-        'ORDER_APPROVE': 'd-909c1b91976e4398b571755e7515c507',
-        'ORDER_DECLINE': 'd-ff725173c31c49aa83f22fd47a6e8831',
-        'ORDER_REVISE': 'd-0fee3760bb2d4d02a689fccf9962645c',
-        'ORDER_DELIVER': 'd-0780fe2d57924dca9fb24de0cc866427'
+        'VERIFY_EMAIL': '',
+        'ORDER_SUBMIT': '',
+        'ORDER_APPROVE': '',
+        'ORDER_DECLINE': '',
+        'ORDER_REVISE': '',
+        'ORDER_DELIVER': ''
     }
 }
 
 # Html to PDF api
-PDF_API_KEY = 'c5277e46-32bd-46ac-8e49-fc2b08f8c1fc'
+PDF_API_KEY = ''
 
 # Tax API
 TAX_API = {
