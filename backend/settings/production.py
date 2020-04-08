@@ -2,7 +2,7 @@ from .main import *
 import sentry_sdk
 import os
 
-sentry_sdk.init("https://20e1ed68bf424fe0ad46a8b428067e89@sentry.io/1468907")
+sentry_sdk.init("https://<sentrykey>@sentry.io")
 
 DEBUG = False
 
@@ -15,9 +15,9 @@ EMAIL_PORT = '587'
 
 # Stripe keys
 STRIPE = {
-    'API_KEY': os.environ.get('STRIPE_API_KEY', 'pk_test_BJHlY3dKiWDpjGVihty1Zwm9'),
-    'CLIENT_SECRET': os.environ.get('STRIPE_SECRET', 'sk_test_4JxNtbEsWhtvC1pWHaYDCB4b'),
-    'CLIENT_ID': 'ca_Ehf6RukQblf1Rg23P0cHAdmBYs7cDGny',
+    'API_KEY': os.environ.get('STRIPE_API_KEY', ''),
+    'CLIENT_SECRET': os.environ.get('STRIPE_SECRET', ''),
+    'CLIENT_ID': '',
     'TOKEN_URL': 'https://connect.stripe.com/oauth/token',
     'APPLICATION_FEE': 0.01,
 }
